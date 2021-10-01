@@ -13,6 +13,7 @@ player.on(
 let totalTime = localStorage.getItem('videoplayer-current-time') || 0;
 
 player.setCurrentTime(totalTime);
+
 // iframe.addEventListener('timeupdate', setRefTime);
 // function setRefTime() {
 //   player.currentTime = 85;
