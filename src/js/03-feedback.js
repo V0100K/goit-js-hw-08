@@ -1,46 +1,37 @@
+'use strict';
+
 import throttle from 'lodash.throttle';
 
-const inputForm = document.querySelector('.feedback-form');
-const formEmail = inputForm.querySelector('input');
-const formMessage = inputForm.querySelector('textarea');
+const feedbackForm = document.querySelector('.feedback-form');
 
-let parsedInputs = {
-  email: '',
-  message: '',
-};
+feedbackForm.addEventListener('input', throttle(inputData, 500));
+feedbackForm.addEventListener('submit', inputSubmit);
 
-let savedInputs = localStorage.getItem('feedback-form-state');
-
-if (savedInputs) {
-  parsedInputs = JSON.parse(savedInputs);
-  formEmail.value = parsedInputs.email;
-  formMessage.value = parsedInputs.message;
+if (localStorage.getItem('feedback-form-state')) {
+  const parsedData = JSON.parse(localStorage.getItem('feedback-form-state'));
+  feedbackForm.querySelector('input').value = parsedData.email;
+  feedbackForm.querySelector('textarea').value = parsedData.message;
 }
 
-inputForm.addEventListener('input', throttle(handleInput, 500));
-inputForm.addEventListener('submit', handleSubmit);
+function inputData(e) {
+  const {
+    elements: { email, message },
+  } = feedbackForm;
 
-function handleInput() {
-  const data = {
-    email: inputForm.elements.email.value,
-    message: inputForm.elements.message.value,
-  };
+  /**znach form */
 
+  const data = { email: email.value, message: message.value };
   localStorage.setItem('feedback-form-state', JSON.stringify(data));
 }
 
-function handleSubmit(event) {
-  event.preventDefault();
+function inputSubmit(e) {
+  e.preventDefault();
 
-  savInputs = localStorage.getItem('feedback-form-state');
+  const parsedData = JSON.parse(localStorage.getItem('feedback-form-state'));
+  console.log(parsedData);
 
-  if (savedInputs) {
-    formEmail.value = parsInputs.email;
-    formMessage.value = parsInputs.message;
-    parsInputs = JSON.parse(savInputs);
-  }
-
-  console.log(parsInputs);
-  event.currentTarget.reset();
+  /**clean */
   localStorage.removeItem('feedback-form-state');
+
+  e.currentTarget.reset();
 }
